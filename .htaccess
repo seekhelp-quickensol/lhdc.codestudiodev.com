@@ -1,7 +1,7 @@
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/theglobalunivers/lhdc.corporateera.com"
+PassengerAppRoot "/home/theglobalunivers/lhdc.codestudiodev.com"
 PassengerBaseURI "/"
-PassengerNodejs "/home/theglobalunivers/nodevenv/lhdc.corporateera.com/20/bin/node"
+PassengerNodejs "/home/theglobalunivers/nodevenv/lhdc.codestudiodev.com/20/bin/node"
 PassengerAppType node
 PassengerStartupFile apps/server/server.js
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
