@@ -1,0 +1,291 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x", "debian-openssl-1.1.x"]
+  output        = "./generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  //url      = "mysql://root:your_new_password@localhost:3306/lhdc"
+  url      = "mysql://theglobalunivers_fleetguard:F9.C{G53inZJ@localhost:3306/theglobalunivers_lhdc"
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String?
+  contact String?
+
+  otp            String?
+  otp_expires_at DateTime?
+
+  department_id  Int?
+  designation_id Int?
+
+  // Relations
+  department  tbl_department_master?  @relation(fields: [department_id], references: [id])
+  designation tbl_designation_master? @relation(fields: [designation_id], references: [id])
+  image       String?
+  password    String
+  role        String                  @default("ADMIN")
+  status      Int                     @default(1) // 1 = ACTIVE, 0 = INACTIVE
+  is_deleted  Int                     @default(0) // 0 = NOT_DELETED, 1 = DELETED
+  created_on  DateTime                @default(now())
+  updated_on  DateTime                @updatedAt
+}
+
+model tbl_designation_master {
+  id               Int      @id @default(autoincrement())
+  designation_name String   @db.VarChar(50)
+  status           Int      @default(1)
+  is_deleted       Int      @default(0)
+  created_on       DateTime @default(now())
+  updated_on       DateTime @updatedAt
+
+  users       User[]
+  teamMembers tbl_our_team[]
+}
+
+model tbl_status_master {
+  id           Int      @id @default(autoincrement())
+  service_name String   @db.VarChar(50)
+  status_name  String   @db.VarChar(50)
+  status       Int      @default(1)
+  is_deleted   Int      @default(0)
+  created_on   DateTime @default(now())
+  updated_on   DateTime @updatedAt
+}
+
+model tbl_department_master {
+  id              Int      @id @default(autoincrement())
+  department_name String   @db.VarChar(50)
+  status          Int      @default(1)
+  is_deleted      Int      @default(0)
+  created_on      DateTime @default(now())
+  updated_on      DateTime @updatedAt
+  users           User[]
+}
+
+model BlogCategory {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  status     Int      @default(1) // 1 = active, 0 = inactive
+  is_deleted Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  blogs      Blog[]
+
+  @@map("tbl_blog_category")
+}
+
+model Blog {
+  id                Int      @id @default(autoincrement())
+  title             String   @db.VarChar(200)
+  meta_url          String   @db.VarChar(500)
+  meta_keyword      String   @db.VarChar(255)
+  author            String   @db.VarChar(100)
+  tag               String   @db.VarChar(255)
+  meta_description  String?  @db.VarChar(500)
+  category_id       Int
+  blog_image        String?
+  short_description String   @db.VarChar(500)
+  blog_content      String   @db.LongText
+  status            Int      @default(1) // 1 = ACTIVE (published), 0 = INACTIVE(draft)
+  is_deleted        Int      @default(0) // 1 = DELETED , 0 = NOT_DELETED
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relation
+  category BlogCategory @relation(fields: [category_id], references: [id])
+
+  @@map("tbl_blogs")
+}
+
+model tbl_press_release {
+  id                    Int     @id @default(autoincrement())
+  title                 String  @db.VarChar(200)
+  meta_url              String  @db.VarChar(500)
+  meta_keyword          String  @db.VarChar(255)
+  author                String  @db.VarChar(100)
+  tag                   String  @db.VarChar(255)
+  meta_description      String? @db.VarChar(500)
+  press_release_image   String?
+  short_description     String  @db.VarChar(500)
+  press_release_content String  @db.LongText
+
+  status     Int      @default(1) // 1 = active, 0 = inactive
+  is_deleted Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("tbl_press_release")
+}
+
+model tbl_faq {
+  id         Int      @id @default(autoincrement())
+  question   String   @db.VarChar(200)
+  answer     String   @db.VarChar(500)
+  status     Int      @default(1) // 1 = active, 0 = inactive
+  is_deleted Int      @default(0)
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  @@map("tbl_faq")
+}
+
+model tbl_contact_us {
+  id Int @id @default(autoincrement())
+
+  name    String @db.VarChar(100)
+  email   String @db.VarChar(150)
+  phone   String @db.VarChar(20)
+  message String @db.LongText
+
+  status     Int @default(1) // 1 = new/readable, 0 = resolved
+  is_deleted Int @default(0)
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  @@map("tbl_contact_us")
+}
+
+model tbl_our_team {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  designation_id Int?
+  designation    tbl_designation_master? @relation(fields: [designation_id], references: [id])
+
+  our_team_image String?
+  status         Int     @default(1) // 1 = new/readable, 0 = resolved
+  is_deleted     Int     @default(0)
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  @@map("tbl_our_team")
+}
+
+model tbl_success_story {
+  id                 Int     @id @default(autoincrement())
+  name               String  @db.VarChar(100)
+  organization       String? @db.VarChar(150)
+  sucess_story_image String?
+  content            String  @db.LongText
+
+  status     Int @default(1) // 1 = active, 0 = inactive
+  is_deleted Int @default(0)
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  @@map("tbl_success_story")
+}
+
+model tbl_home_improvement_application {
+  id Int @id @default(autoincrement())
+
+  application_no   String @db.VarChar(50)
+  application_type String @db.VarChar(100)
+
+  // Stepper
+  active_step Int @default(0)
+  is_draft    Int @default(1) // 1 = draft, 0 = submitted
+
+  // Applicant Info
+  applicant_name     String? @db.VarChar(150)
+  applicant_property String? @db.VarChar(255)
+  reside_address     String? @db.VarChar(10)
+
+  email      String? @db.VarChar(150)
+  phone_home String? @db.VarChar(20)
+  phone_work String? @db.VarChar(20)
+  phone_cell String? @db.VarChar(20)
+
+  // Employer Info
+  applicant_employer_name    String? @db.VarChar(150)
+  applicant_employer_address String? @db.VarChar(255)
+
+  coapplicant_employer_name    String? @db.VarChar(150)
+  coapplicant_employer_address String? @db.VarChar(255)
+
+  // Property & Finance
+  has_mortgage     String? @db.VarChar(10)
+  mortgagee        String? @db.VarChar(150)
+  mortgage_amount  String? @db.VarChar(50)
+  mortgage_balance String? @db.VarChar(50)
+
+  gross_annual_income       String? @db.VarChar(50)
+  monthly_liabilities_total String? @db.VarChar(50)
+
+  property_owned_duration String? @db.VarChar(100)
+  number_of_units         String? @db.VarChar(10)
+  taxes_paid              String? @db.VarChar(10)
+  payment_status          String? @db.VarChar(150)
+
+  // Household
+  total_persons     String? @db.VarChar(10)
+  children_under_18 String? @db.VarChar(10)
+
+  // Renovation
+  renovation_details String? @db.LongText
+
+  // Maintenance
+  maintenance_plumbing        Boolean @default(false)
+  maintenance_electrical      Boolean @default(false)
+  maintenance_heating_cooling Boolean @default(false)
+  maintenance_appliances      Boolean @default(false)
+  maintenance_doors_windows   Boolean @default(false)
+  maintenance_flooring_walls  Boolean @default(false)
+  maintenance_safety          Boolean @default(false)
+  maintenance_pest            Boolean @default(false)
+  maintenance_other_text      String? @db.VarChar(255)
+
+  // Certification
+  certification_signer_name String?   @db.VarChar(150)
+  certification_signature   String?   @db.LongText
+  certification_datetime    DateTime?
+
+  status     Int @default(1)
+  is_deleted Int @default(0)
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  // Relations
+  household_members   tbl_household_member[]
+  monthly_liabilities tbl_monthly_liability[]
+
+  @@map("tbl_home_improvement_application")
+}
+
+model tbl_household_member {
+  id             Int @id @default(autoincrement())
+  application_id Int
+
+  name String @db.VarChar(150)
+  age  Int
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  application tbl_home_improvement_application @relation(fields: [application_id], references: [id], onDelete: Cascade)
+
+  @@map("tbl_household_member")
+}
+
+model tbl_monthly_liability {
+  id             Int @id @default(autoincrement())
+  application_id Int
+
+  payee  String @db.VarChar(150)
+  amount String @db.VarChar(50)
+
+  created_on DateTime @default(now())
+  updated_on DateTime @updatedAt
+
+  application tbl_home_improvement_application @relation(fields: [application_id], references: [id], onDelete: Cascade)
+
+  @@map("tbl_monthly_liability")
+}

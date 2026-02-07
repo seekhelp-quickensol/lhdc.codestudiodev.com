@@ -1,0 +1,90 @@
+"use client";
+
+import React, { useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/shadcn/ui/button";
+import { signIn } from "@/src/lib/auth/actions";
+import { Eye, EyeOff } from "lucide-react";
+
+export default function SignInForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    startTransition(async () => {
+      const result = await signIn(formData); // call server action
+      if (!result.success) {
+        setError(result.error || "Sign in failed");
+        return;
+      }
+      router.push(callbackUrl);
+      router.refresh();
+    });
+  };
+
+
+  return (
+    <div className="flex flex-col flex-1  w-full">
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="rounded-md bg-red-50 p-4 text-sm text-red-600">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <label className="mb-1.5 block text-sm font-medium text-secondary dark:text-gray-400" htmlFor="email">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            disabled={isPending}
+            placeholder="you@example.com"
+            className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+          />
+        </div>
+
+        <div className="space-y-2 relative">
+          <label className="mb-1.5 block text-sm font-medium text-secondary dark:text-gray-400" htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            required
+            disabled={isPending}
+            placeholder="••••••••"
+            className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-10 text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-100"
+          disabled={isPending}
+        >
+          {isPending ? "Signing in..." : "Sign in"}
+        </Button>
+      </form>
+    </div>
+
+
+  );
+}

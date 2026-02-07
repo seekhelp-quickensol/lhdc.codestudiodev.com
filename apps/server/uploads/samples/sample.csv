@@ -1,0 +1,8 @@
+property_code,date,amenities,possession_status,owner_agent,owner_name,owner_mobile_no,owner_alternate_no,address,portal,carpet_area,price_rent,deposit,link,location,property_variant
+PROP-2324,2025-12-10,"Garden,Swimming Pool,Gym",Under Construction,Agent,Maile Barr,8459203695,8793656234,"Et reprehenderit inv",MagicBricks,1200,850000,200000,https://timesofindia.indiatimes.com/,Andheri West,3BHK
+PROP-4567,2025-11-15,"Parking,Gym,Power Backup",Ready to Move,Owner,Rahul Sharma,9876543210,9123456789,"Near Juhu Beach, Mumbai",99acres,950,45000,90000,https://99acres.com/property-4567,Juhu,2BHK
+PROP-8910,2025-12-05,"Garden,Clubhouse,Security",Under Construction,Agent,Priya Mehta,7766554433,9988776655,"Sector 7, Gurgaon",Housing.com,1450,120000,300000,https://housing.com/property-8910,Sector 7,4BHK
+PROP-1122,2025-10-20,"Swimming Pool,Gym,Play Area",Ready to Move,Owner,Amit Patel,9898765432,,"Bandra East, Mumbai",MagicBricks,800,38000,75000,https://magicbricks.com/1122,Bandra East,2BHK
+PROP-3344,2025-12-18,"Parking,Power Backup,Lift",Ready to Move,Agent,Sneha Kapoor,9123456789,9876543210,"Whitefield, Bangalore",99acres,1100,65000,150000,https://99acres.com/property-3344,Whitefield,3BHK
+PROP-5566,2025-12-12,"Garden,Swimming Pool,Gym,Clubhouse",Under Construction,Owner,Vikram Singh,8887776666,,"Koregaon Park, Pune",Housing.com,1800,95000,250000,https://housing.com/property-5566,Koregaon Park,4BHK
+PROP-7788,2025-11-28,"Security,Power Backup",Ready to Move,Agent,Neha Gupta,9654321876,9876541234,"Indirapuram, Ghaziabad",MagicBricks,700,28000,60000,https://magicbricks.com/7788,Indirapuram,1BHK
